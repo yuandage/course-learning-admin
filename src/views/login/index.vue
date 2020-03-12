@@ -153,7 +153,7 @@ export default {
                 if (hasRoute) {
                   this.$router.push({ path: this.redirect, query: this.otherQuery }, onComplete => { }, onAbort => { })
                 } else {
-                  this.$router.push({ path: '/', query: this.otherQuery }, onComplete => { }, onAbort => { })
+                  this.$router.push({ path: '/401', query: this.otherQuery }, onComplete => { }, onAbort => { })
                 }
                 this.loading = false
               })

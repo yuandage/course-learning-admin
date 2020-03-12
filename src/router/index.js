@@ -8,28 +8,6 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import componentsRouter from './modules/components'
-import nestedRouter from './modules/nested'
-
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon show in the sidebar
-    noCache: true                if set true, the page will no be cached(default is false)
-    affix: true                  if set true, the tag will affix in the tags-view
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
 
 /**
  * constantRoutes
@@ -37,6 +15,19 @@ import nestedRouter from './modules/nested'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: '主页', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
   {
     path: '/redirect',
     component: Layout,
@@ -56,7 +47,7 @@ export const constantRoutes = [
   {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
-    hidden: true
+    hidden: false
   },
   {
     path: '/404',
@@ -68,19 +59,7 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: '主页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
+
   {
     path: '/profile',
     component: Layout,
@@ -102,56 +81,89 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+
   {
-    path: '/user',
+    path: '/system',
     component: Layout,
-    meta: {
-      title: '用户管理',
-      icon: 'lock',
-      roles: ['admin', 'dev'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/index'),
-        name: 'User',
-        meta: { title: '用户管理', icon: 'user', noCache: true,
-          roles: ['admin', 'dev'] }// you can set roles in root nav
-      }
-    ]
-  },
-  {
-    path: '/role',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/role/index'),
-        name: 'Role',
-        meta: { title: '角色管理', icon: 'peoples', noCache: true,
-          roles: ['admin', 'dev'] }// you can set roles in root nav
-      }
-    ]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
+    redirect: '/system/user',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'System',
     meta: {
-      title: '权限管理',
+      title: '系统管理',
       icon: 'lock',
       roles: ['admin', 'dev'] // you can set roles in root nav
     },
     children: [
+      {
+        path: 'user',
+        component: () => import('@/views/system/user'),
+        name: 'User',
+        meta: {
+          title: '用户管理',
+          icon: 'user',
+          roles: ['admin', 'dev'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/system/role'),
+        name: 'Role',
+        meta: {
+          title: '角色管理',
+          icon: 'peoples',
+          roles: ['admin', 'dev'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'permission',
+        component: () => import('@/views/system/permission'),
+        name: 'Permission',
+        meta: {
+          title: '权限管理',
+          icon: 'lock',
+          roles: ['admin', 'dev'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'Course',
+    meta: {
+      title: '课程管理',
+      icon: 'education',
+      roles: ['admin', 'dev', 'teacher'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/permission/index'),
+        name: 'IndexPermission',
+        meta: {
+          title: '课程管理',
+          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'chapter',
+        component: () => import('@/views/permission/index'),
+        name: 'Chapter',
+        meta: {
+          title: '章节管理',
+          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
+        }
+      },
       {
         path: 'page',
         component: () => import('@/views/permission/page'),
         name: 'PagePermission',
         meta: {
-          title: 'Page Permission',
-          roles: ['admin', 'dev'] // or you can only set roles in sub nav
+          title: '视频管理',
+          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
         }
       },
       {
@@ -159,8 +171,18 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
-          title: 'Directive Permission'
+          title: '试题管理',
+          roles: ['admin', 'dev', 'teacher']
           // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'resource',
+        component: () => import('@/views/permission/role'),
+        name: 'RolePermission',
+        meta: {
+          title: '资料管理',
+          roles: ['admin', 'dev', 'teacher']
         }
       },
       {
@@ -168,12 +190,13 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/role'),
         name: 'RolePermission',
         meta: {
-          title: 'Role Permission',
-          roles: ['admin', 'dev']
+          title: '评论管理',
+          roles: ['admin', 'dev', 'teacher']
         }
       }
     ]
   },
+
   {
     path: '/icon',
     component: Layout,
@@ -189,7 +212,6 @@ export const asyncRoutes = [
 
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
-  nestedRouter,
 
   {
     path: '/example',
@@ -260,7 +282,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

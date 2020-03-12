@@ -88,48 +88,80 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-        .then(async() => {
-          await deleteRole(row.id)
+      }).then(async() => {
+        const res = await deleteRole(row.id)
+        if (res.code === 20000) {
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
-        })
-        .catch(err => { console.error(err) })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '删除失败!'
+          })
+        }
+      }).catch(err => { console.error(err) })
     },
 
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         const res = await updateRole(this.role.id, this.role)
-        this.$set(this.rolesList, this.roleIndex, this.role)
-        this.dialogVisible = false
-        this.$notify({
-          title: 'Success',
-          dangerouslyUseHTMLString: true,
-          message: `
-            <div>Role Key: ${res.flag}</div>
-            <div>Role Name: ${res.code}</div>
+        if (res.code === 20000) {
+          this.$set(this.rolesList, this.roleIndex, this.role)
+          this.dialogVisible = false
+          this.$notify({
+            title: 'Success',
+            dangerouslyUseHTMLString: true,
+            message: `
+            <div>User Key: ${res.flag}</div>
+            <div>User Name: ${res.code}</div>
             <div>Description: ${res.message}</div>
           `,
-          type: 'success'
-        })
+            type: 'success'
+          })
+        } else {
+          this.$notify({
+            title: '错误',
+            dangerouslyUseHTMLString: true,
+            message: `
+            <div>User Key: ${res.flag}</div>
+            <div>User Name: ${res.code}</div>
+            <div>Description: ${res.message}</div>
+          `,
+            type: 'error'
+          })
+        }
+        this.dialogVisible = false
       } else {
         const res = await addRole(this.role)
-        this.dialogVisible = false
-        this.rolesList.unshift(this.role)
-        this.$notify({
-          title: 'Success',
-          dangerouslyUseHTMLString: true,
-          message: `
-            <div>Role Key: ${res.flag}</div>
-            <div>Role Name: ${res.code}</div>
+        if (res.code === 20000) {
+          this.rolesList.unshift(this.role)
+          this.$notify({
+            title: 'Success',
+            dangerouslyUseHTMLString: true,
+            message: `
+            <div>User Key: ${res.flag}</div>
+            <div>User Name: ${res.code}</div>
             <div>Description: ${res.message}</div>
           `,
-          type: 'success'
-        })
+            type: 'success'
+          })
+        } else {
+          this.$notify({
+            title: '错误',
+            dangerouslyUseHTMLString: true,
+            message: `
+            <div>User Key: ${res.flag}</div>
+            <div>User Name: ${res.code}</div>
+            <div>Description: ${res.message}</div>
+          `,
+            type: 'error'
+          })
+        }
+        this.dialogVisible = false
       }
     }
   }
