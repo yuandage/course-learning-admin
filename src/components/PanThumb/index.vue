@@ -81,7 +81,7 @@ export default {
   height: inherit;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.05);
+  /* box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.05); */
 }
 
 .pan-info h3 {

@@ -3,19 +3,29 @@
     <el-button type="primary" @click="handleAddPermission">新增权限</el-button>
 
     <el-table :data="permissionList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="id" width="220">
+      <el-table-column align="center" label="id" width="180">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="权限名称" width="220">
+      <el-table-column align="center" label="权限名称" width="180">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="权限描述">
+      <el-table-column align="center" label="权限描述" width="200">
         <template slot-scope="scope">
           {{ scope.row.description }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建人" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.createUser }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新人" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.updateUser }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">

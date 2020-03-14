@@ -1,5 +1,5 @@
 import { login, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, setUserInfo, removeUserInfo } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserInfo, getUserInfo, removeUserInfo } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -7,7 +7,7 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: [],
+  roles: getUserInfo().roles,
   rolesStatus: false,
   authorities: []
 }
@@ -119,7 +119,7 @@ const actions = {
   changeRoles({ commit, dispatch }, role) {
     return new Promise(resolve => {
       const token = role + '-token'
-
+      console.log(token)
       commit('SET_TOKEN', token)
       setToken(token)
 

@@ -18,22 +18,22 @@
           {{ scope.row.nickname }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联系方式" width="180">
+      <el-table-column align="center" label="用户手机号" width="180">
         <template slot-scope="scope">
           {{ scope.row.mobile }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户角色">
+      <el-table-column align="center" label="用户邮箱" width="200">
         <template slot-scope="scope">
-          {{ scope.row.mobile }}
+          {{ scope.row.email }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
-          <el-button type="success" size="small" @click="handleUserRoles(scope)">修改角色</el-button>
-        </template>s
+          <el-button type="success" size="small" @click="handleChangeUserRoles(scope)">修改角色</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -46,7 +46,10 @@
           <el-input v-model="user.nickname" placeholder="用户昵称" />
         </el-form-item>
         <el-form-item label="mobile">
-          <el-input v-model="user.mobile" placeholder="联系方式" />
+          <el-input v-model="user.mobile" placeholder="用户手机号" />
+        </el-form-item>
+        <el-form-item label="email">
+          <el-input v-model="user.email" placeholder="用户邮箱" />
         </el-form-item>
         <el-form-item label="Password">
           <el-input v-model="user.password" show-password placeholder="用户密码" />
@@ -101,8 +104,8 @@ export default {
     async userRoles(newVal, oldVal) {
       if (this.userRolesDialogVisible === false) { return }
       if (newVal.length > oldVal.length) {
-        const role = { userId: this.user.id, roleId: newVal[newVal.length - 1] }
-        const res = await addUserRole(role)
+        const userRole = { userId: this.user.id, roleId: newVal[newVal.length - 1] }
+        const res = await addUserRole(userRole)
         if (res.code === 20000) {
           this.$message({
             message: '添加角色成功',
@@ -210,6 +213,7 @@ export default {
           `,
             type: 'success'
           })
+          this.getUsers()
         } else {
           this.$notify({
             title: '错误',
@@ -225,7 +229,7 @@ export default {
         this.dialogVisible = false
       }
     },
-    async handleUserRoles(scope) {
+    async handleChangeUserRoles(scope) {
       this.userRoles = []
       this.user = scope.row
       const userRolesRes = await getUserRoles(scope.row.id)

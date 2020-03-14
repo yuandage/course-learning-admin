@@ -90,7 +90,7 @@ export const asyncRoutes = [
     name: 'System',
     meta: {
       title: '系统管理',
-      icon: 'lock',
+      icon: 'system',
       roles: ['admin', 'dev'] // you can set roles in root nav
     },
     children: [
@@ -120,7 +120,7 @@ export const asyncRoutes = [
         name: 'Permission',
         meta: {
           title: '权限管理',
-          icon: 'lock',
+          icon: 'permission',
           roles: ['admin', 'dev'] // or you can only set roles in sub nav
         }
       }
@@ -130,68 +130,15 @@ export const asyncRoutes = [
   {
     path: '/course',
     component: Layout,
-    redirect: '/course/index',
-    alwaysShow: true, // will always show the root menu
-    name: 'Course',
-    meta: {
-      title: '课程管理',
-      icon: 'education',
-      roles: ['admin', 'dev', 'teacher'] // you can set roles in root nav
-    },
     children: [
       {
         path: 'index',
-        component: () => import('@/views/permission/index'),
-        name: 'IndexPermission',
+        component: () => import('@/views/course/index'),
+        name: 'Course',
         meta: {
           title: '课程管理',
+          icon: 'course',
           roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'chapter',
-        component: () => import('@/views/permission/index'),
-        name: 'Chapter',
-        meta: {
-          title: '章节管理',
-          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: '视频管理',
-          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: '试题管理',
-          roles: ['admin', 'dev', 'teacher']
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'resource',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: '资料管理',
-          roles: ['admin', 'dev', 'teacher']
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: '评论管理',
-          roles: ['admin', 'dev', 'teacher']
         }
       }
     ]
