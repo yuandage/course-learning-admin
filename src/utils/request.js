@@ -14,6 +14,13 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+    // 我这里是文件上传，发送的是二进制流，所以需要设置请求头的'Content-Type'
+    if (config.url.includes('/resource/resourceUpload')) {
+      config.headers['Content-Type'] = 'multipart/form-data'
+    }
+    if (config.url.includes('/video/videoUpload')) {
+      config.headers['Content-Type'] = 'multipart/form-data'
+    }
 
     if (store.getters.token) {
       // let each request carry token

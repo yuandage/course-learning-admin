@@ -7,26 +7,14 @@
       fit
       style="width: 100%;margin-top:20px;"
     >
-      <el-table-column v-loading="loading" align="center" label="id" width="170" element-loading-text="请给我点时间！">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
+      <el-table-column prop="id" align="center" label="id" width="170">
       </el-table-column>
-      <el-table-column width="180" align="center" label="资料名称">
-        <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
+      <el-table-column prop="name" width="180" align="center" label="资料名称">
       </el-table-column>
-      <el-table-column width="180" align="center" label="资料简介">
-        <template slot-scope="scope">
-          <span>{{ scope.row.summary }}</span>
-        </template>
+      <el-table-column prop="summary" width="180" align="center" label="资料简介">
       </el-table-column>
 
-      <el-table-column width="80" label="资料类型">
-        <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
-        </template>
+      <el-table-column prop="type" width="80" label="资料类型">
       </el-table-column>
 
       <el-table-column width="240" align="center" label="资料下载">
@@ -62,7 +50,19 @@
           <el-input v-model="resource.type" placeholder="类型" />
         </el-form-item>
         <el-form-item label="文件">
-          <el-input v-model="resource.analysis" placeholder="文件" />
+          <el-upload
+            ref="upload"
+            action="/"
+            accept=""
+            :on-preview="handlePreview"
+            :before-upload="handleBeforeUpload"
+            :on-success="handlesuccess"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+            <div slot="tip" class="el-upload__tip">文件大小不超过10MB</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { getResource, addResource, updateResource, deleteResource } from '@/api/course-resource'
+import { getResource, updateResource, deleteResource, uploadResource } from '@/api/course-resource'
 
 export default {
   props: {
@@ -91,7 +91,8 @@ export default {
       dialogVisible: false,
       dialogType: 'new',
       resource: {},
-      resourceIndex: 0
+      resourceIndex: 0,
+      resourceFormData: {}
     }
   },
   created() {
@@ -155,22 +156,43 @@ export default {
           })
         }
       } else {
-        this.resource.courseId = this.courseId
-        const res = await addResource(this.resource)
-        if (res.code === 20000) {
-          this.resourceList.unshift(this.resource)
-          this.$message({
-            type: 'success',
-            message: '添加成功!'
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '添加失败!'
-          })
-        }
+        this.resourceFormData.append('courseId', this.courseId)
+        this.resourceFormData.append('name', this.resource.name)
+        this.resourceFormData.append('type', this.resource.type)
+        this.resourceFormData.append('summary', this.resource.summary)
+        uploadResource(this.resourceFormData).then(res => {
+          if (res.code === 20000) {
+            this.resourceList.unshift(this.resource)
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '添加失败!'
+            })
+          }
+        })
         this.dialogVisible = false
       }
+    },
+    handleBeforeUpload(file) {
+      this.resourceFormData = new FormData()
+      this.resourceFormData.append('file', file)// 传文件
+
+      return false
+    },
+    handlesuccess(res, file) {
+      console.log(res, file)
+    },
+    handleRemove(file) {
+      console.log(file)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    beforeRemove(file) {
     }
   }
 }

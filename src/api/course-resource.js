@@ -31,3 +31,11 @@ export function deleteResource(id) {
     method: 'delete'
   })
 }
+
+export function uploadResource(data) {
+  return request({
+    url: '/resource/resourceUpload',
+    method: 'post',
+    data
+  })
+}

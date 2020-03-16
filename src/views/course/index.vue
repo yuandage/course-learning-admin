@@ -18,24 +18,15 @@
 
         </template>
       </el-table-column>
-      <el-table-column align="center" label="id" width="180">
-        <template slot-scope="scope">
-          {{ scope.row.id }}
-        </template>
+      <el-table-column prop="id" align="center" label="id" width="180">
       </el-table-column>
-      <el-table-column align="center" label="课程名称" width="180">
-        <template slot-scope="scope">
-          {{ scope.row.name }}
-        </template>
+      <el-table-column prop="name" align="center" label="课程名称" width="180">
       </el-table-column>
-      <el-table-column align="center" label="课程简介" width="180">
-        <template slot-scope="scope">
-          {{ scope.row.summary }}
-        </template>
+      <el-table-column prop="summary" align="center" label="课程简介" width="180">
       </el-table-column>
       <el-table-column align="center" label="热门课程" width="80">
         <template slot-scope="scope">
-          {{ scope.row.popular }}
+          {{ scope.row.popular=='1'?'是':'否' }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -84,18 +75,19 @@
 
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import ChapterTabPane from './components/ChapterTabPane'
-import QuestionTabPane from './components/QuestionTabPane'
-import ResourceTabPane from './components/ResourceTabPane'
-import CourseCommentTabPane from './components/CourseCommentTabPane'
-import QuestionCommentTabPane from './components/QuestionCommentTabPane'
+import CourseChapter from './components/CourseChapter'
+import CourseVideo from './components/CourseVideo'
+import CourseQuestion from './components/CourseQuestion'
+import CourseResource from './components/CourseResource'
+import CourseComment from './components/CourseComment'
+import CourseQuestionComment from './components/CourseQuestionComment'
 import { deepClone } from '@/utils'
 import { getCourses, addCourse, deleteCourse, updateCourse } from '@/api/course'
 
 export default {
   name: 'Course',
-  components: { Pagination, ChapterTabPane, QuestionTabPane,
-    ResourceTabPane, CourseCommentTabPane, QuestionCommentTabPane },
+  components: { Pagination, CourseChapter, CourseVideo, CourseQuestion,
+    CourseResource, CourseComment, CourseQuestionComment },
   data() {
     return {
       course: {},
@@ -109,12 +101,12 @@ export default {
         limit: 5
       },
       tabMapOptions: [
-        { label: '章节管理', key: 'chapter', component: 'ChapterTabPane' },
-        { label: '视频管理', key: 'video', component: 'VideoTabPane' },
-        { label: '试题管理', key: 'question', component: 'QuestionTabPane' },
-        { label: '资料管理', key: 'resource', component: 'ResourceTabPane' },
-        { label: '课程评论管理', key: 'courseComment', component: 'CourseCommentTabPane' },
-        { label: '试题评论管理', key: 'questionComment', component: 'QuestionCommentTabPane' }
+        { label: '章节管理', key: 'chapter', component: 'CourseChapter' },
+        { label: '视频管理', key: 'video', component: 'CourseVideo' },
+        { label: '试题管理', key: 'question', component: 'CourseQuestion' },
+        { label: '资料管理', key: 'resource', component: 'CourseResource' },
+        { label: '课程评论管理', key: 'courseComment', component: 'CourseComment' },
+        { label: '试题评论管理', key: 'questionComment', component: 'CourseQuestionComment' }
       ],
       activeComponent: '',
       createdTimes: 0,
@@ -244,7 +236,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .tab-container {
-    margin: 20px;
-  }
 </style>

@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 查询所有课程章节
+export function getCourseChapters(courseId) {
+  return request({
+    url: `/chapter/courseId/${courseId}`,
+    method: 'get'
+  })
+}
+
 // 查询课程章节
 export function getChapter(courseId, parentId) {
   return request({

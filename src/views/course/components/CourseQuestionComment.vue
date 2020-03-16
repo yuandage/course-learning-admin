@@ -1,15 +1,14 @@
 <template>
   <div>
     <el-table :data="commentList" border fit style="width: 100%;margin-top:20px;">
-      <el-table-column v-loading="loading" align="center" label="id" width="170" element-loading-text="请给我点时间！">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
+      <el-table-column
+        prop="id"
+        align="center"
+        label="id"
+        width="170"
+      >
       </el-table-column>
-      <el-table-column width="160" align="center" label="评论人">
-        <template slot-scope="scope">
-          <span>{{ scope.row.username }}</span>
-        </template>
+      <el-table-column prop="username" width="160" align="center" label="评论人">
       </el-table-column>
       <el-table-column width="350" align="center" label="评论内容">
         <template slot-scope="scope">
@@ -35,7 +34,7 @@
 </template>
 
 <script>
-import { getComment, deleteComment } from '@/api/course-comment'
+import { getComment, deleteComment } from '@/api/course-question-comment'
 
 export default {
   props: {
@@ -58,7 +57,7 @@ export default {
       this.loading = true
       getComment(this.courseId).then(res => {
         this.commentList = res.data
-        this.loading = false
+        this.loading = true
       })
     },
 

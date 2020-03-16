@@ -10,31 +10,20 @@
       highlight-current-row
       style="width: 100%;margin-top:20px;"
     >
-      <el-table-column v-loading="loading" align="center" label="ID" width="200" element-loading-text="请给我点时间！">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
+      <el-table-column prop="id" align="center" label="id" width="160">
+      </el-table-column>
+      <el-table-column prop="title" width="180" align="center" label="章节标题">
+      </el-table-column>
+      <el-table-column prop="description" width="320" label="章节描述">
       </el-table-column>
 
-      <el-table-column width="180" align="center" label="章节标题">
-        <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="200" label="章节描述">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="80" align="center" label="时长">
+      <el-table-column width="60" align="center" label="时长">
         <template slot-scope="scope">
           <span>{{ scope.row.time }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120" label="视频链接">
+      <el-table-column width="180" label="视频链接">
         <template slot-scope="scope">
           <a :href="scope.row.videoUrl">{{ scope.row.videoUrl }}</a>
         </template>

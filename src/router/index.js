@@ -126,7 +126,20 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  {
+    path: '/external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'http://localhost:9000/swagger-ui.html',
+        meta: {
+          title: '接口文档',
+          icon: 'documentation',
+          roles: ['admin', 'dev', 'test']
+        }
+      }
+    ]
+  },
   {
     path: '/course',
     component: Layout,
