@@ -71,11 +71,10 @@
             ref="upload"
             action="/"
             accept=""
-            :on-preview="handlePreview"
-            :before-upload="handleBeforeUpload"
-            :on-success="handlesuccess"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
+            show-file-list
+            :file-list="fileList"
+            :auto-upload="false"
+            :on-change="handleChange"
           >
             <el-button size="small" type="primary">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">文件大小不超过10MB</div>
@@ -111,7 +110,8 @@ export default {
       dialogType: 'new',
       video: {},
       videoIndex: 0,
-      videoFormData: {}
+      videoFormData: {},
+      fileList: []
     }
   },
   created() {
@@ -129,6 +129,7 @@ export default {
       this.dialogType = 'new'
       this.dialogVisible = true
       this.video = {}
+      this.videoFormData = new FormData()
       getCourseChapters(this.courseId).then(res => {
         this.chapterList = res.data
       })
@@ -138,6 +139,9 @@ export default {
       this.dialogVisible = true
       this.videoIndex = scope.$index
       this.video = scope.row
+      getCourseChapters(this.courseId).then(res => {
+        this.chapterList = res.data
+      })
     },
 
     handleDelete({ $index, row }) {
@@ -179,10 +183,10 @@ export default {
           })
         }
       } else {
-        this.videoFormData.append('courseId', this.courseId)
-        this.videoFormData.append('sectionId', this.video.sectionId)
-        this.videoFormData.append('name', this.video.name)
-        this.videoFormData.append('summary', this.video.summary)
+        this.videoFormData.set('courseId', this.courseId)
+        this.videoFormData.set('sectionId', this.video.sectionId)
+        this.videoFormData.set('name', this.video.name)
+        this.videoFormData.set('summary', this.video.summary)
         const res = await uploadVideo(this.videoFormData)
         if (res.code === 20000) {
           this.videoList.unshift(this.video)
@@ -200,21 +204,13 @@ export default {
       }
     },
     handleBeforeUpload(file) {
-      this.videoFormData = new FormData()
-      this.videoFormData.append('file', file)// 传文件
 
-      return false
     },
-    handlesuccess(res, file) {
-      console.log(res, file)
-    },
-    handleRemove(file) {
-      console.log(file)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    beforeRemove(file) {
+    handleChange(file, fileList) {
+      if (fileList.length > 0) {
+        this.fileList = [fileList[fileList.length - 1]] // 这一步，是 展示最后一次选择的csv文件
+        this.videoFormData.set('file', file.raw)// 传文件
+      }
     }
   }
 }
