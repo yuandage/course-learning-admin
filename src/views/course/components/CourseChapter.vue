@@ -57,7 +57,7 @@
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
           <div v-if="isParentChapter===0">
-            <el-select v-model="chapter.parentId" placeholder="请选择">
+            <el-select v-model="chapter.parentId" placeholder="请选择父章节">
               <el-option
                 v-for="item in chapterList"
                 :key="item.id"
@@ -200,6 +200,9 @@ export default {
     },
     async confirmChapter() {
       const isEdit = this.dialogType === 'edit'
+      // 子章节可以变为父章节,但是父章节变为子章节需要父章节没有子章节
+      if (this.isParentChapter === 1) { this.chapter.parentId = 0 }
+
       if (isEdit) {
         const res = await updateChapter(this.chapter.id, this.chapter)
         if (res.code === 20000) {
@@ -217,7 +220,6 @@ export default {
         }
       } else {
         this.chapter.courseId = this.courseId
-        if (this.isParentChapter === 1) { this.chapter.parentId = 0 }
         const res = await addChapter(this.chapter)
         if (res.code === 20000) {
           this.chapterList.unshift(this.chapter)

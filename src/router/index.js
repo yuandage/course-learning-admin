@@ -141,6 +141,23 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/classification',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/classification/index'),
+        name: 'Classification',
+        meta: {
+          title: '分类管理',
+          icon: 'course',
+          roles: ['admin', 'dev', 'teacher'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+
+  {
     path: '/course',
     component: Layout,
     children: [
