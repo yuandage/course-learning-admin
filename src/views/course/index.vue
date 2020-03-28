@@ -41,6 +41,17 @@
 
     <el-dialog :visible.sync="dialogVisible" :modal="false" :title="dialogType==='edit'?'编辑课程':'新增课程'">
       <el-form :model="course" label-width="100px" label-position="left">
+        <el-form-item label="category">
+          <el-select v-model="course.parentId" placeholder="请选择课程分类">
+            <el-option
+              v-for="item in courseSubCategoryList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="name">
           <el-input v-model="course.name" placeholder="课程名称" />
         </el-form-item>
@@ -83,6 +94,7 @@ import CourseComment from './components/CourseComment'
 import CourseQuestionComment from './components/CourseQuestionComment'
 import { deepClone } from '@/utils'
 import { getCourses, addCourse, deleteCourse, updateCourse } from '@/api/course'
+import { getCourseSubCategory } from '@/api/course-category'
 
 export default {
   name: 'Course',
@@ -92,6 +104,7 @@ export default {
     return {
       course: {},
       courseList: [],
+      courseSubCategoryList: [],
       courseIndex: 0,
       dialogVisible: false,
       dialogType: 'new',
@@ -140,13 +153,20 @@ export default {
     showCreatedTimes() {
       this.createdTimes = this.createdTimes + 1
     },
+    getCourseSubCategory() {
+      getCourseSubCategory().then(res => {
+        if (res.code === 20000) { this.courseSubCategoryList = res.data }
+      })
+    },
     handleAddCourse() {
       this.dialogType = 'new'
       this.dialogVisible = true
+      if (this.courseSubCategoryList.length === 0) { this.getCourseSubCategory() }
     },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
+      if (this.courseSubCategoryList.length === 0) { this.getCourseSubCategory() }
       this.courseIndex = scope.$index
       this.course = deepClone(scope.row)
     },

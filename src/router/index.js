@@ -141,13 +141,13 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/classification',
+    path: '/category',
     component: Layout,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/classification/index'),
-        name: 'Classification',
+        component: () => import('@/views/category/index'),
+        name: 'CourseCategory',
         meta: {
           title: '分类管理',
           icon: 'course',

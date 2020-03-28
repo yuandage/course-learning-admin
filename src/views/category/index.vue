@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddClassification">新增分类</el-button>
+    <el-button type="primary" @click="handleAddCourseCategory">新增分类</el-button>
 
     <el-table
-      :data="classificationList"
+      :data="courseCategoryList"
       style="width: 100%;margin-top:30px;"
       border
       row-key="id"
@@ -25,19 +25,19 @@
     </el-table>
 
     <el-dialog :visible.sync="dialogVisible" :modal="false" :title="dialogType==='edit'?'编辑分类':'新增分类'">
-      <el-form :model="classification" label-width="100px" label-position="left">
+      <el-form :model="courseCategory" label-width="100px" label-position="left">
         <el-form-item label="名称">
-          <el-input v-model="classification.name" placeholder="分类名称" />
+          <el-input v-model="courseCategory.name" placeholder="分类名称" />
         </el-form-item>
         <el-form-item label="父分类">
-          <el-radio-group v-model="isParentClassification">
+          <el-radio-group v-model="isParentCourseCategory" @change="checkCategory">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
-          <div v-if="isParentClassification===0">
-            <el-select v-model="classification.parentId" placeholder="请选择父分类">
+          <div v-if="isParentCourseCategory===0">
+            <el-select v-model="courseCategory.parentId" placeholder="请选择父分类" @change="checkSelect">
               <el-option
-                v-for="item in classificationList"
+                v-for="item in courseCategoryList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -48,7 +48,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="confirmClassification">确认</el-button>
+        <el-button type="primary" @click="confirmCourseCategory">确认</el-button>
       </div>
     </el-dialog>
 
@@ -57,46 +57,59 @@
 
 <script>
 
-import { getClassifications, addClassification, deleteClassification, updateClassification } from '@/api/course-classification'
+import { getCourseCategory, addCourseCategory, deleteCourseCategory, updateCourseCategory } from '@/api/course-category'
 
 export default {
-  name: 'Classification',
+  name: 'CourseCategory',
   data() {
     return {
-      classification: {},
-      classificationList: [],
+      courseCategory: {},
+      courseCategoryList: [],
       dialogVisible: false,
       dialogType: 'new',
-      isParentClassification: 1
+      isParentCourseCategory: 1
     }
   },
   computed: {
   },
 
   created() {
-    this.getClassifications()
+    this.getCourseCategory()
   },
   methods: {
-    getClassifications() {
-      getClassifications(0).then(res => {
-        this.classificationList = res.data
-        this.classificationList.forEach(item => {
-          getClassifications(item.id).then(res => {
-            if (res.data != null) {
-              this.$set(item, 'children', res.data)
-            }
-          })
-        })
+    getCourseCategory() {
+      getCourseCategory().then(res => {
+        if (res.code === 20000) { this.courseCategoryList = res.data }
       })
     },
-    handleAddClassification() {
+    checkCategory(label) {
+      if (label === 0) {
+        if (this.courseCategory.children && this.courseCategory.children.length > 0) {
+          this.$message({
+            type: 'warning',
+            message: '父分类不为空'
+          })
+          this.isParentCourseCategory = 1
+        }
+      }
+    },
+    checkSelect(parentId) {
+      if (parentId === this.courseCategory.id) {
+        this.$message({
+          type: 'warning',
+          message: '父分类不能为自身'
+        })
+        this.courseCategory.parentId = 0
+      }
+    },
+    handleAddCourseCategory() {
       this.dialogType = 'new'
       this.dialogVisible = true
     },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
-      this.classification = scope.row
+      this.courseCategory = scope.row
     },
 
     handleDelete({ $index, row }) {
@@ -107,15 +120,15 @@ export default {
           type: 'warning'
         }).then(async() => {
           var i = 0
-          for (i = 0; i < this.classificationList.length; i++) {
-            if (this.classificationList[i].id === row.id) {
+          for (i = 0; i < this.courseCategoryList.length; i++) {
+            if (this.courseCategoryList[i].id === row.id) {
               break
             }
           }
-          const hasChildren = this.classificationList[i].children && this.classificationList[i].children.length > 0
+          const hasChildren = this.courseCategoryList[i].children && this.courseCategoryList[i].children.length > 0
           if (hasChildren) {
-            this.classificationList[i].children.forEach(item => {
-              deleteClassification(item.id).then(res => {
+            this.courseCategoryList[i].children.forEach(item => {
+              deleteCourseCategory(item.id).then(res => {
                 if (res.code === 20000) {
                   this.$message({
                     type: 'success',
@@ -131,13 +144,13 @@ export default {
             })
           }
 
-          deleteClassification(row.id).then(res => {
+          deleteCourseCategory(row.id).then(res => {
             if (res.code === 20000) {
               this.$message({
                 type: 'success',
                 message: '分类删除成功!'
               })
-              this.classificationList.splice(i, 1)
+              this.courseCategoryList.splice(i, 1)
             } else {
               this.$message({
                 type: 'error',
@@ -152,13 +165,13 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async() => {
-          const res = await deleteClassification(row.id)
+          const res = await deleteCourseCategory(row.id)
           if (res.code === 20000) {
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
-            this.getClassifications()
+            this.getCourseCategory()
           } else {
             this.$message({
               type: 'error',
@@ -168,20 +181,20 @@ export default {
         })
       }
     },
-    async confirmClassification() {
+    async confirmCourseCategory() {
       const isEdit = this.dialogType === 'edit'
       // 子分类可以变为父分类,但是父分类变为子分类需要父分类没有子分类
-      if (this.isParentClassification === 1) { this.classification.parentId = 0 }
+      if (this.isParentCourseCategory === 1) { this.courseCategory.parentId = 0 }
 
       if (isEdit) {
-        const res = await updateClassification(this.classification.id, this.classification)
+        const res = await updateCourseCategory(this.courseCategory.id, this.courseCategory)
         if (res.code === 20000) {
           this.dialogVisible = false
           this.$message({
             type: 'success',
             message: '更新成功!'
           })
-          this.getClassifications()
+          this.getCourseCategory()
         } else {
           this.$message({
             type: 'error',
@@ -189,14 +202,14 @@ export default {
           })
         }
       } else {
-        const res = await addClassification(this.classification)
+        const res = await addCourseCategory(this.courseCategory)
         if (res.code === 20000) {
-          this.classificationList.unshift(this.classification)
+          this.courseCategoryList.unshift(this.courseCategory)
           this.$message({
             type: 'success',
             message: '添加成功!'
           })
-          this.getClassifications()
+          this.getCourseCategory()
         } else {
           this.$message({
             type: 'error',
