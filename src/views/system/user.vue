@@ -31,7 +31,7 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
+          <el-button type="warning" size="small" @click="handleDelete(scope)">锁定</el-button>
           <el-button type="success" size="small" @click="handleChangeUserRoles(scope)">修改角色</el-button>
         </template>
       </el-table-column>
@@ -61,7 +61,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="userRolesDialogVisible" :modal="false" title="修改角色">
+    <el-dialog :visible.sync="userRolesDialogVisible" :modal="false" :title="user.username+' 角色:'">
       <el-select v-model="userRoles" multiple placeholder="请选择角色" style="width:500px">
         <el-option
           v-for="item in roles"

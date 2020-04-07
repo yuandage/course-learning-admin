@@ -7,8 +7,13 @@
       </pan-thumb>
       <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
       <div class="info-container">
-        <span class="display_name">{{ name }}</span>
-        <span style="font-size:20px;padding-top:20px;display:inline-block;">Editor's Dashboard</span>
+        <span class="display_name">{{ userInfo.user.username }}</span>
+        <br>
+        <span style="font-size:20px;display:inline-block;">角色: </span>
+        <el-tag v-for=" item in roles " :key="item" style="font-size:20px;">{{ item }}</el-tag>
+        <br>
+        <span style="font-size:20px;padding-top:-220px;display:inline-block;">权限: </span>
+        <el-tag v-for="item in userInfo.authorities" :key="item" type="success" style="font-size:20px;">{{ item }}</el-tag>
       </div>
     </div>
     <div>
@@ -21,13 +26,15 @@
 import { mapGetters } from 'vuex'
 import PanThumb from '@/components/PanThumb'
 import GithubCorner from '@/components/GithubCorner'
+import { getUserInfo } from '@/utils/auth'
 
 export default {
   name: 'DashboardEditor',
   components: { PanThumb, GithubCorner },
   data() {
     return {
-      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
+      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3',
+      userInfo: { }
     }
   },
   computed: {
@@ -36,6 +43,14 @@ export default {
       'avatar',
       'roles'
     ])
+  },
+  created() {
+    this.getUserInfo()
+  },
+  methods: {
+    getUserInfo() {
+      this.userInfo = getUserInfo()
+    }
   }
 }
 </script>
@@ -62,13 +77,15 @@ export default {
       position: relative;
       margin-left: 190px;
       height: 150px;
-      line-height: 200px;
+      line-height: 50px;
       .display_name {
         font-size: 48px;
         line-height: 48px;
         color: #212121;
-        position: absolute;
         top: 25px;
+      }
+      .el-tag{
+        margin: 0 10px;
       }
     }
   }

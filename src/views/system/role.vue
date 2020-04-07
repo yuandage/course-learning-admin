@@ -57,7 +57,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="rolePermissiomDialogVisible" :modal="false" title="修改权限">
+    <el-dialog :visible.sync="rolePermissiomDialogVisible" :modal="false" :title="role.name+' 权限:'">
       <el-select v-model="rolePermissions" multiple placeholder="请选择权限" style="width:500px">
         <el-option
           v-for="item in permissions"

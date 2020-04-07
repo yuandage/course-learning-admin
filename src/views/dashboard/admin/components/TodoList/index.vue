@@ -47,9 +47,9 @@ const filters = {
   completed: todos => todos.filter(todo => todo.done)
 }
 const defalutList = [
-  { text: '课程学习平台-前端', done: false },
-  { text: '课程学习平台-管理端', done: false },
-  { text: '课程学习平台-服务端', done: false },
+  { text: '课程学习平台-客户端', done: true },
+  { text: '课程学习平台-管理端', done: true },
+  { text: '课程学习平台-服务端', done: true },
   { text: '毕业设计', done: false },
   { text: '毕业论文', done: false },
   { text: '论文答辩', done: false },

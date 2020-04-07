@@ -6,7 +6,8 @@ function resolve(dir) {
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-
+  // 输出文件目录
+  outputDir: './docker/dist',
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
