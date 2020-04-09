@@ -110,6 +110,7 @@ export default {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.courseCategory = scope.row
+      this.isParentCourseCategory = scope.row.parentId === '0' ? 1 : 0
     },
 
     handleDelete({ $index, row }) {
