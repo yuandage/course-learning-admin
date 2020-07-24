@@ -8,7 +8,7 @@
         width="170"
       >
       </el-table-column>
-      <el-table-column prop="username" width="160" align="center" label="评论人">
+      <el-table-column prop="nickname" width="160" align="center" label="评论人">
       </el-table-column>
       <el-table-column width="350" align="center" label="评论内容">
         <template slot-scope="scope">
@@ -16,9 +16,9 @@
         </template>
       </el-table-column>
       t
-      <el-table-column width="120" label="评论时间">
+      <el-table-column width="150" label="评论时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">

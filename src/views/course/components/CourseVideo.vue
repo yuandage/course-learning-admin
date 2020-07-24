@@ -189,7 +189,7 @@ export default {
         this.videoFormData.set('summary', this.video.summary)
         const res = await uploadVideo(this.videoFormData)
         if (res.code === 20000) {
-          this.videoList.unshift(this.video)
+          this.getVideo()
           this.$message({
             type: 'success',
             message: '添加成功!'

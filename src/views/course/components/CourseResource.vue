@@ -162,7 +162,7 @@ export default {
         this.resourceFormData.append('summary', this.resource.summary)
         uploadResource(this.resourceFormData).then(res => {
           if (res.code === 20000) {
-            this.resourceList.unshift(this.resource)
+            this.getResource()
             this.$message({
               type: 'success',
               message: '添加成功!'
